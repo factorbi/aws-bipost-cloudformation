@@ -67,16 +67,21 @@ You can launch this CloudFormation stack in your account in your closest AWS Reg
 
 # Create the Cloudformation Stack
 
-From AWS Cloudformation Console, Click Next Step on blue button.
-Set a Stack Name example bipostrds.
-For the BucketName Parameter  insert the newly S3 bucket name that we provided over email.
-Insert a secure password, must be at least 8 characters containing letters, numbers and symbols.
-Insert the database Admin Username example: root
-DBInstanceClass: for testing purposes select the smallest available, currently t2.small.
-Environment: set the purpose of the stack.
-Public Subnet CIDR, Public Subnet CIDR,  VPCCIDR : you can customize the subnet address space if multiple environments are needed; otherwise use, the recomended.
-SubnetsAZ: Select two availability zones to create the resources
-Click Next Step, blue button.
+* From AWS Cloudformation Console, Click Next Step on blue button.
+* Set a Stack Name example bipostrds.
+* For the BucketName Parameter  insert the newly S3 bucket name that we provided over email.
+* Insert a secure password, must be at least 8 characters containing letters, numbers and symbols.
+* Insert the database Admin Username example: root
+* DBInstanceClass: for testing purposes select the smallest available, currently t2.small.
+* Environment: set the purpose of the stack.
+* Public Subnet CIDR, Public Subnet CIDR,  VPCCIDR : you can customize the subnet address space if multiple environments are needed; otherwise use, the recomended.
+* SubnetsAZ: Select two availability zones to create the resources.
+* Click Next Step, blue button twice.
+* Check "I acknowledge that AWS CloudFormation might create IAM resources" in the bottom of the window.
+
+![Capabilities](img/Capabilities.png?raw=true)
+
+* Click Next Step, blue button and wait for completion. 
 
 
 
