@@ -1,10 +1,10 @@
-#Link your AWS Account WIP
+# Link your AWS Account WIP
 
 Follow these instructions to link your AWS Account and RDS Aurora instance to Bipost API.
 
 **IMPORTANT NOTICE: Many settings suggested here are for testing purposes. If you are to use the following AWS services for production you may want to follow your company policies and understand how to use AWS security according to your needs.**
 
-##Don't have an AWS account?
+## Don't have an AWS account?
 
 Not familiar with AWS or just want to skip creating AWS releated services? Write us.
 
@@ -19,7 +19,7 @@ Not familiar with AWS or just want to skip creating AWS releated services? Write
 6. Congrats you have an AWS account!
 
 
-##Check closest AWS Region to you location
+## Check closest AWS Region to you location
 
 [cloudping.info](http://cloudping.info/)
 
@@ -37,13 +37,13 @@ Take note of the closest region.
 
 -------
 
-##Get Canonical User ID from your IAM Home
+## Get Canonical User ID from your IAM Home
 
 Put Instructions here.
 
-##Create AWS Assets 
+## Create AWS Assets 
 
-This reference architecture templates creates the aws infrastructure needed by Bipost
+
 
 You can launch this CloudFormation stack in your account in your closest AWS Region:
 
@@ -65,6 +65,34 @@ You can launch this CloudFormation stack in your account in your closest AWS Reg
 | Asia Pacific (Mumbai) | ap-south-1 |  [![cloudformation-launch-button](img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=Production&templateURL=https://s3.amazonaws.com/poner-aca-template-bucket/Amazon-RDS-bipost.template) |
 | South America (São Paulo) | sa-east-1 |  [![cloudformation-launch-button](img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=Production&templateURL=https://s3.amazonaws.com/poner-aca-template-bucket/Amazon-RDS-bipost.template) |
 
+# Create the Cloudformation Stack
+
+From AWS Cloudformation Console, Click Next Step on blue button.
+Set a Stack Name example bipostrds.
+For the BucketName Parameter  insert the newly S3 bucket name that we provided over email.
+Insert a secure password, must be at least 8 characters containing letters, numbers and symbols.
+Insert the database Admin Username example: root
+DBInstanceClass: for testing purposes select the smallest available, currently t2.small.
+Environment: set the purpose of the stack.
+Public Subnet CIDR, Public Subnet CIDR,  VPCCIDR : you can customize the subnet address space if multiple environments are needed; otherwise use, the recomended.
+SubnetsAZ: Select two availability zones to create the resources
+Click Next Step, blue button.
+
+
+
+# What you will deploy
+
+Use this  to automatically set up the following environment on AWS:
+
+1. A virtual private cloud (VPC) configured across two Availability Zones, with two public subnet provisioned in each Availability Zone
+2. An internet gateway to allow access from the internet to the public subnets.*
+3. An AWS Identity and Access Management (IAM) user with fine-grained permissions for access to S3 from the Aurora Database.
+4. Appropriate security group for database access restricted to only necessary protocol and port.
+5. Networking and Route configuration.
+6. Database Parameter Group with the needed settings
+7. Aurora Database cluster
+8. Aurora Database Cluster Parameter Group with the needed settings
+9. AWS Aurora Instance.
 
 ## License
 
