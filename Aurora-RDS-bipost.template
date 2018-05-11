@@ -339,10 +339,21 @@
           {
             "CidrIp": "0.0.0.0/0",
             "IpProtocol": "tcp",
-            "ToPort": 3306,
-            "FromPort": 3306
+            "ToPort": "-1",
+            "FromPort": "-1"
           }
         ],
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 3306,
+            "ToPort": 3306,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+
+
+
         "Tags": [
           {
             "Key": "Name",
