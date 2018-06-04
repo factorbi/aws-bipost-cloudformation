@@ -341,7 +341,7 @@
             "IpProtocol": "tcp",
             "FromPort": "0",
             "ToPort": "65535"
-           
+
           }
         ],
         "SecurityGroupIngress": [
@@ -388,8 +388,7 @@
                 {
                   "Effect": "Allow",
                   "Action": [
-                    "s3:GetObject",
-                    "s3:GetObjectVersion"
+                    "s3:Get*"
                   ],
                   "Resource": [
                     {
@@ -408,8 +407,7 @@
                 {
                   "Effect": "Allow",
                   "Action": [
-                    "s3:GetObject",
-                    "s3:GetObjectVersion"
+                    "s3:Get*"
                   ],
                   "Resource": [
                     {
@@ -465,15 +463,9 @@
         "Description": "Bipost Aurora Database  Cluster Parameter Group",
         "Family": "aurora5.6",
         "Parameters": {
-          "aurora_load_from_s3_role": {
-            "Ref": "DBRole"
-          },
-          "aurora_select_into_s3_role": {
-            "Ref": "DBRole"
-          },
-          "aws_default_s3_role": {
-            "Ref": "DBRole"
-          }
+          "aurora_load_from_s3_role": {"Fn::GetAtt" : [ "DBRole" , "Arn"] },
+          "aurora_select_into_s3_role":{"Fn::GetAtt" : [ "DBRole" , "Arn"] },
+          "aws_default_s3_role": {"Fn::GetAtt" : [ "DBRole" , "Arn"] }
         }
       }
     },
