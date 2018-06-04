@@ -485,7 +485,7 @@
     "DBCluster": {
       "Type": "AWS::RDS::DBCluster",
       "Properties": {
-        "Engine": "aurora",
+        "Engine": "aurora-mysql",
         "MasterUsername": {
           "Ref": "DBAdminUsername"
         },
@@ -527,7 +527,7 @@
     "DBInstance": {
       "Type": "AWS::RDS::DBInstance",
       "Properties": {
-        "Engine": "aurora",
+        "Engine": "aurora-mysql",
         "DBClusterIdentifier": {
           "Ref": "DBCluster"
         },
