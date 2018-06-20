@@ -57,7 +57,10 @@
     },
     "SubnetsAZ": {
       "Description": "Select two availability zones to create the resources",
-      "Type": "List<AWS::EC2::AvailabilityZone::Name>"
+      "Type": "List<AWS::EC2::AvailabilityZone::Name>",
+      "AllowedPattern" : ".+",
+      "ConstraintDescription" : "Must have values"
+
     },
     "PublicSubnetACIDR": {
       "Description": "Public Subnet A CIDR",
@@ -461,7 +464,7 @@
       "DependsOn": "DBRole",
       "Properties": {
         "Description": "Bipost Aurora Database  Cluster Parameter Group",
-        "Family": "aurora5.6",
+        "Family": "aurora-mysql5.7",
         "Parameters": {
           "aurora_load_from_s3_role": {"Fn::GetAtt" : [ "DBRole" , "Arn"] },
           "aurora_select_into_s3_role":{"Fn::GetAtt" : [ "DBRole" , "Arn"] },
@@ -473,7 +476,7 @@
       "Type": "AWS::RDS::DBParameterGroup",
       "Properties": {
         "Description": "Bipost Aurora Parameter Group",
-        "Family": "aurora5.6",
+        "Family": "aurora-mysql5.7",
         "Parameters": {
           "log_bin_trust_function_creators": "1",
           "max_allowed_packet": "1073741824",
@@ -485,7 +488,7 @@
     "DBCluster": {
       "Type": "AWS::RDS::DBCluster",
       "Properties": {
-        "Engine": "aurora",
+        "Engine": "aurora-mysql",
         "MasterUsername": {
           "Ref": "DBAdminUsername"
         },
@@ -527,7 +530,7 @@
     "DBInstance": {
       "Type": "AWS::RDS::DBInstance",
       "Properties": {
-        "Engine": "aurora",
+        "Engine": "aurora-mysql",
         "DBClusterIdentifier": {
           "Ref": "DBCluster"
         },
