@@ -50,10 +50,10 @@
       "ConstraintDescription": "Select the environment to deploy"
     },
     "BucketName": {
-      "Description": "Bipost provided bucket name",
+      "Description": "Bucket name provided by Factor BI",
       "Type": "String",
       "AllowedPattern": "[a-zA-Z][a-zA-Z0-9-]*",
-      "ConstraintDescription": "Insert the Bipost provided bucket name"
+      "ConstraintDescription": "Insert bucket name"
     },
     "SubnetsAZ": {
       "Description": "Select two availability zones to create the resources",
@@ -463,12 +463,13 @@
       "Type": "AWS::RDS::DBClusterParameterGroup",
       "DependsOn": "DBRole",
       "Properties": {
-        "Description": "Bipost Aurora Database  Cluster Parameter Group",
+        "Description": "Bipost Aurora Database Cluster Parameter Group",
         "Family": "aurora-mysql5.7",
         "Parameters": {
           "aurora_load_from_s3_role": {"Fn::GetAtt" : [ "DBRole" , "Arn"] },
           "aurora_select_into_s3_role":{"Fn::GetAtt" : [ "DBRole" , "Arn"] },
-          "aws_default_s3_role": {"Fn::GetAtt" : [ "DBRole" , "Arn"] }
+          "aws_default_s3_role": {"Fn::GetAtt" : [ "DBRole" , "Arn"] },
+          "aws_default_lambda_role": {"Fn::GetAtt" : [ "DBRole" , "Arn"] }
         }
       }
     },
@@ -481,7 +482,8 @@
           "log_bin_trust_function_creators": "1",
           "max_allowed_packet": "1073741824",
           "max_connections": "16000",
-          "max_user_connections": "4294967295"
+          "max_user_connections": "4294967295",
+          "event_scheduler": "ON"
         }
       }
     },
@@ -569,8 +571,8 @@
     }
   },
   "Outputs": {
-    "RdsDbURL": {
-      "Description": "RDS Aurora Database URL",
+    "AuroraEndpoint": {
+      "Description": "Aurora-MySQL Endpoint",
       "Value": {
         "Fn::GetAtt": [
           "DBCluster",
@@ -578,8 +580,8 @@
         ]
       }
     },
-    "DbUser": {
-      "Description": "RDS Aurora Database admin account user",
+    "DBUser": {
+      "Description": "Aurora Database admin account",
       "Value": {
         "Ref": "DBAdminUsername"
       }
@@ -588,6 +590,12 @@
       "Description": "IAM Role to allow Aurora to s3",
       "Value": {
         "Ref": "DBRole"
+      }
+    },
+    "Bucket": {
+      "Description": "Bucket name to use on biPost.exe Windows program",
+      "Value": {
+        "Ref": "BucketName"      
       }
     }
   }
