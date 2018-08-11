@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "",
+  "Description": "Create AWS services to link your AWS account to Bipost API",
   "Parameters": {
     "DBAdminUsername": {
       "Default": "root",
@@ -16,7 +16,7 @@
       "ConstraintDescription": "Must be at least 8 characters containing letters, numbers and symbols.",
       "Description": "Database Admin password. Must be at least 8 characters containing letters, numbers and symbols.",
       "MaxLength": "32",
-      "MinLength": "6",
+      "MinLength": "8",
       "NoEcho": "true",
       "Type": "String"
     },
@@ -38,7 +38,7 @@
       ]
     },
     "Environment": {
-      "Description": "Environment name",
+      "Description": "Environment",
       "Type": "String",
       "Default": "dev",
       "AllowedValues": [
@@ -56,7 +56,7 @@
       "ConstraintDescription": "Insert bucket name"
     },
     "SubnetsAZ": {
-      "Description": "Select two availability zones to create the resources",
+      "Description": "********** PLEASE SELECT TWO ZONES *********",
       "Type": "List<AWS::EC2::AvailabilityZone::Name>",
       "AllowedPattern" : ".+",
       "ConstraintDescription" : "Must have values"
@@ -367,6 +367,7 @@
     },
     "DBRole": {
       "Type": "AWS::IAM::Role",
+      "Description": "Allows RDS instance to access Factor BI bucket and invoke Bipost API",
       "Properties": {
         "Path": "/",
         "AssumeRolePolicyDocument": {
@@ -391,7 +392,11 @@
                 {
                   "Effect": "Allow",
                   "Action": [
-                    "s3:Get*"
+                    "s3:ListBucket",
+                    "s3:GetObject*",
+                    "s3:PutObject*",
+                    "s3:DeleteObject*",
+                    "s3:ObjectOwnerOverrideToBucketOwner"
                   ],
                   "Resource": [
                     {
@@ -404,15 +409,7 @@
                           }
                         ]
                       ]
-                    }
-                  ]
-                },
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "s3:Get*"
-                  ],
-                  "Resource": [
+                    },
                     {
                       "Fn::Join": [
                         "",
@@ -426,6 +423,11 @@
                       ]
                     }
                   ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": "lambda:InvokeFunction",
+                  "Resource": "arn:aws:lambda:us-east-1:951464950892:function:bipost-getOutData"
                 }
               ]
             }
@@ -568,6 +570,58 @@
         "DBCluster",
         "DBParameterGroup"
       ]
+    },
+    "IAMUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "UserName": "auroraToS3",
+        "Policies": [
+          {
+            "PolicyName": "auroraToS3Policy",
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:s3:::",
+                          {
+                            "Ref": "BucketName"
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:s3:::",
+                          {
+                            "Ref": "BucketName"
+                          },
+                          "/*"
+                        ]
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "AccessKey": {
+      "Type" : "AWS::IAM::AccessKey",
+      "Properties" : {
+        "UserName" : { "Ref" : "IAMUser" }
+      }
     }
   },
   "Outputs": {
@@ -595,7 +649,19 @@
     "Bucket": {
       "Description": "Bucket name to use on biPost.exe Windows program",
       "Value": {
-        "Ref": "BucketName"      
+        "Ref": "BucketName"
+      }
+    },
+    "AccessKey": {
+      "Description": "Access Key",
+      "Value": {
+        "Ref": "AccessKey"
+      }
+    },
+    "Secret": {
+      "Description": "Secret Key",
+      "Value": {
+        "Fn::GetAtt" : [ "AccessKey", "SecretAccessKey" ]
       }
     }
   }
