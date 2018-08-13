@@ -1,56 +1,47 @@
-# Link your AWS Account WIP
+# Bipost
+Bipost is a simple database synchronization tool for continually moving data from on-premises to AWS Aurora MySQL and back forward.
+Created to keep your Windows databases on-premises while providing a way to extract, load & transform specific sets of data to AWS Aurora.
 
-Follow these instructions to link your AWS Account and RDS Aurora instance to Bipost API.
+**Sources:**
 
-**IMPORTANT NOTICE: Many settings suggested here are for testing purposes. If you are to use the following AWS services for production you may want to follow your company policies and understand how to use AWS security according to your needs.**
+* [Microsoft SQL Server®](http://www.microsoft.com/en-us/sql-server)
+* [Firebird SQL](https://firebirdsql.org/) Windows Version.
+* DBF dBase III.
 
-## Don't have an AWS account?
+**Destination:**
 
-Not familiar with AWS or just want to skip creating AWS releated services? Write us.
+* [Amazon Aurora MySQL](https://aws.amazon.com/rds/aurora/details/mysql-details/)
 
-1. Create an AWS account [here](https://portal.aws.amazon.com/billing/signup#/start)
+![Synchronize to AWS](img/BipostSyncDiagram2_med.png)
 
-![Screenshot](img/aws-screenshot.png?raw=true "Screenshot")
+# Link your AWS Account to Bipost API
 
-2. AWS usually makes an automated verification phone call, we suggest to provide a land line.
-3. Provide payment information.
-4. Select Basic Support (free plan).
-5. Check if you can open RDS Dashboard, by searching under AWS services.
-6. Congrats you have an AWS account!
+This CloudFormation template will link your AWS Account to Bipost API.
+*A CloudFormation template is an automated script to create and configure AWS resources.*
 
+These instructions assume that you already have:
+1. An active AWS account.
+2. Sent to [info@factorbi.com](mailto:info@factorbi.com) your **AWS Account ID** and **Canonical User ID.**
+3. Received from Factor BI your **bucket name.**
 
-## Check closest AWS Region to you location
+If you are not sure about these requirements please visit the [documentation page.](https://factorbi.github.io/)
 
-[cloudping.info](http://cloudping.info/)
+## Run the script
 
+### Before you start
+1. Have at hand your **bucket name.** It must look like this: `bipostdata-123456789012`
+2. Log in to your AWS account.
 
-Click the above link and hit HTTP Ping and look for the lowest latency.
+**IMPORTANT NOTICE: Many settings used here are for testing purposes. If you are planning to use the following AWS services for production you may want to follow your company policies and understand how to use AWS security according to your needs.**
 
-Maybe you want to try this at different times of the day.
+### 1. Launch the Stack
 
-Take note of the closest region.
+Select the closest region to your location and click **Launch Stack.**
 
-
-![Cloudping](img/CloudPing.png?raw=true "Cloudping")
-
-
-
--------
-
-## Get Canonical User ID from your IAM Home
-
-Put Instructions here.
-
-## Create AWS Assets 
-
-
-
-You can launch this CloudFormation stack in your account in your closest AWS Region:
-
-| AWS Region | Short name | | 
+| AWS Region | Short name | |
 | -- | -- | -- |
-| US East (Ohio) | us-east-2 | [![cloudformation-launch-button](img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=Production&templateURL=https://s3.amazonaws.com/bipost-cloudformation/Aurora-RDS-bipost.template) |
 | US East (N. Virginia) | us-east-1 | [![cloudformation-launch-button](img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=Production&templateURL=https://s3.amazonaws.com/bipost-cloudformation/Aurora-RDS-bipost.template) |
+| US East (Ohio) | us-east-2 | [![cloudformation-launch-button](img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=Production&templateURL=https://s3.amazonaws.com/bipost-cloudformation/Aurora-RDS-bipost.template) |
 | US West (N. California) | us-west-2 | [![cloudformation-launch-button](img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=Production&templateURL=https://s3.amazonaws.com/bipost-cloudformation/Aurora-RDS-bipost.template) |
 | US West (Oregon) | us-west-1 | [![cloudformation-launch-button](img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=Production&templateURL=https://s3.amazonaws.com/bipost-cloudformation/Aurora-RDS-bipost.template) |
 | Canada (Central) | ca-central-1 | [![cloudformation-launch-button](img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/new?stackName=Production&templateURL=https://s3.amazonaws.com/bipost-cloudformation/Aurora-RDS-bipost.template) |
@@ -65,43 +56,54 @@ You can launch this CloudFormation stack in your account in your closest AWS Reg
 | Asia Pacific (Mumbai) | ap-south-1 |  [![cloudformation-launch-button](img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=Production&templateURL=https://s3.amazonaws.com/bipost-cloudformation/Aurora-RDS-bipost.template) |
 | South America (São Paulo) | sa-east-1 |  [![cloudformation-launch-button](img/launch-stack.png)](https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=Production&templateURL=https://s3.amazonaws.com/bipost-cloudformation/Aurora-RDS-bipost.template) |
 
-# Create the Cloudformation Stack
+### 2. Select Template
 
-* From AWS Cloudformation Console, Click Next Step on blue button.
-* Set a Stack Name example bipostrds.
-* For the BucketName Parameter  insert the newly S3 bucket name that we provided over email.
-* Insert a secure password, must be at least 8 characters containing letters, numbers and symbols.
-* Insert the database Admin Username example: root
-* DBInstanceClass: for testing purposes select the smallest available, currently t2.small.
-* Environment: set the purpose of the stack.
-* Public Subnet CIDR, Public Subnet CIDR,  VPCCIDR : you can customize the subnet address space if multiple environments are needed; otherwise use, the recomended.
-* SubnetsAZ: Select two availability zones to create the resources.
-* Click Next Step, blue button twice.
-* Check "I acknowledge that AWS CloudFormation might create IAM resources" in the bottom of the window.
+* The template must be already selected, click **Next** lower-right blue button.
 
-![Capabilities](img/Capabilities.png?raw=true)
+![Select Template](img/create-stack-step1.png)
 
-* Click Next Step, blue button and wait for completion. 
+### 3. Specify Details
+* **Stack Name:** this will be the prefix of all provisioned services.  Example: `mycompany-prod`
+* **BucketName:** Paste the S3 bucket name that your received from Factor BI over email. It must look like this: `bipostdata-123456789012`
+* **DBAdminPassword:** Type a complex password. Must be at least 8 characters containing uppercase and lowercase letters, numbers and symbols.
+    **Password must be at least eight characters long, as in "mypassword". Can be any printable ASCII character except "/", """, or "@".**
 
+* **DBAdminUsername:** Database Admin Username, example: root
+* **DBInstanceClass:** for testing purposes select the smallest available, currently db.t2.small.
+* **Environment:** Text to be included in the database cluster name.
+* **PublicSubnetACIDR:** Leave default. Only modify the subnet address if multiple environments are needed, example: `10.20.10.0/24`
+* **PublicSubnetBCIDR:** Leave default. Only modify the subnet address if multiple environments are needed, example: `10.20.20.0/24`
+* **SubnetsAZ:** Select two availability zones to create the resources.
+* **VPCCIDR:** Leave default. Only modify the address if multiple environment are needed, example: `10.20.0.0/16`
+* Click **Next**, blue button blue button.
 
+![Select Template](img/create-stack-step2.png)
 
-# What you will deploy
+### 4. Options
+* Leave all defaults, many in blank.
+* Click **Next**, blue button blue button (lower-right).
 
-Use this  to automatically set up the following environment on AWS:
+### 5. Review
 
-1. A virtual private cloud (VPC) configured across two Availability Zones, with two public subnet provisioned in each Availability Zone
-2. An internet gateway to allow access from the internet to the public subnets.*
-3. An AWS Identity and Access Management (IAM) user with fine-grained permissions for access to S3 from the Aurora Database.
-4. Appropriate security group for database access restricted to only necessary protocol and port.
-5. Networking and Route configuration.
-6. Database Parameter Group with the needed settings
-7. Aurora Database cluster
-8. Aurora Database Cluster Parameter Group with the needed settings
-9. AWS Aurora Instance.
+* Check "I acknowledge that AWS CloudFormation might create IAM resources with custom names".
+
+![Capabilities](img/capabilities.png?raw=true)
+
+* Click **Create** blue button. This will redirect to CloudFormation console home.
+* Click refresh icon, upper right corner.
+
+![CloudFormation Console Home](img/cloudFormation-console-home-1.png)
+
+### 6. Resources created
+
+* Check Stack Name.
+* Review **Events** tab while Status is CREATE_IN_PROGRESS.
+* Once Status is CREATE_COMPLETE review **Outputs** tab.
+* You may want to copy and save on a secure place all Outputs, as you will use them for further configuration.
+
+![Stack details](img/stack-details.png)
+
 
 ## License
 
-Copyright (c) 2018 Factor BI
-
-Licensed under MIT [License](LICENSE.md)
-
+Licensed under [MIT License.](LICENSE.md)

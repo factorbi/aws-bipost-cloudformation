@@ -23,7 +23,7 @@
     "DBInstanceClass": {
       "Default": "db.t2.small",
       "Type": "String",
-      "Description": "Database instance class, e.g. db.t2.micro (free tier)",
+      "Description": "Database instance class, e.g. db.t2.micro",
       "ConstraintDescription": "DB instance class not supported",
       "AllowedValues": [
         "db.t2.small",
