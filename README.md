@@ -87,7 +87,7 @@ Select the closest region to your location and click **Launch Stack.**
 
 * Check "I acknowledge that AWS CloudFormation might create IAM resources with custom names".
 
-![Capabilities](img/capabilities.png?raw=true)
+![Capabilities](img/capabilities.png)
 
 * Click **Create** blue button. This will redirect to CloudFormation console home.
 * Click refresh icon, upper right corner.
