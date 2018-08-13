@@ -1,0 +1,97 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "RDS Policy for Aurora Cluster",
+  "Parameters": {
+    "BucketName": {
+      "Description": "Bucket name provided by Factor BI",
+      "Type": "String",
+      "AllowedPattern": "[a-zA-Z][a-zA-Z0-9-]*",
+      "ConstraintDescription": "Insert bucket name"
+    }
+  },
+  "Resources": {
+    "DBRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Path": "/",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "rds.amazonaws.com"
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "bipostRDStoS3",
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:ListBucket",
+                    "s3:GetObject*",
+                    "s3:PutObject*",
+                    "s3:DeleteObject*",
+                    "s3:ObjectOwnerOverrideToBucketOwner"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:s3:::",
+                          {
+                            "Ref": "BucketName"
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:s3:::",
+                          {
+                            "Ref": "BucketName"
+                          },
+                          "/*"
+                        ]
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": "lambda:InvokeFunction",
+                  "Resource": "arn:aws:lambda:us-east-1:951464950892:function:bipost-getOutData"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+  },
+  "Outputs": {
+    "DBRole": {
+      "Description": "IAM Role to allow Aurora to s3",
+      "Value": {
+        "Ref": "DBRole"
+      }
+    },
+    "Bucket": {
+      "Description": "Bucket name to use on biPost.exe Windows program",
+      "Value": {
+        "Ref": "BucketName"
+      }
+    }
+  }
+}

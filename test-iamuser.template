@@ -1,0 +1,92 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "IAM User for Programmatic Access",
+  "Parameters": {
+    "BucketName": {
+      "Description": "Bucket name provided by Factor BI",
+      "Type": "String",
+      "AllowedPattern": "[a-zA-Z][a-zA-Z0-9-]*",
+      "ConstraintDescription": "Insert bucket name"
+    }
+  },
+  "Resources": {
+    "IAMUser": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "UserName": "auroraToS3",
+        "Policies": [
+          {
+            "PolicyName": "auroraToS3Policy",
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:*"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:s3:::",
+                          {
+                            "Ref": "BucketName"
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:s3:::",
+                          {
+                            "Ref": "BucketName"
+                          },
+                          "/*"
+                        ]
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "AccessKey": {
+      "Type" : "AWS::IAM::AccessKey",
+      "Properties" : {
+        "UserName" : { "Ref" : "IAMUser" }
+      }
+    }
+  },
+  "Outputs": {
+    "IAMUser": {
+      "Description": "IAM User",
+      "Value": {
+        "Ref": "IAMUser"
+      }
+    },
+    "Bucket": {
+      "Description": "Bucket name to use on biPost.exe Windows program",
+      "Value": {
+        "Ref": "BucketName"
+      }
+    },
+    "AccessKey": {
+      "Description": "Access Key",
+      "Value": {
+        "Ref": "AccessKey"
+      }
+    },
+    "Secret": {
+      "Description": "Secret Key",
+      "Value": {
+        "Fn::GetAtt" : [ "AccessKey", "SecretAccessKey" ]
+      }
+    }
+  }
+}
