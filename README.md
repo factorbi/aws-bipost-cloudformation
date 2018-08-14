@@ -32,7 +32,7 @@ If you are not sure about these requirements please visit the [documentation pag
 1. Have at hand your **bucket name.** It must look like this: `bipostdata-123456789012`
 2. Log in to your AWS account.
 
-**IMPORTANT NOTICE: Many settings used here are for testing purposes. If you are planning to use the following AWS services for production you may want to follow your company policies and understand how to use AWS security according to your needs.**
+**IMPORTANT NOTICE: If you are planning to use the following AWS resources for production you may want to follow your company policies and understand how to use AWS security according to your needs.**
 
 ### 1. Launch the Stack
 
@@ -65,9 +65,7 @@ Select the closest region to your location and click **Launch Stack.**
 ### 3. Specify Details
 * **Stack Name:** this will be the prefix of all provisioned services.  Example: `mycompany-prod`
 * **BucketName:** Paste the S3 bucket name that your received from Factor BI over email. It must look like this: `bipostdata-123456789012`
-* **DBAdminPassword:** Type a complex password. Must be at least 8 characters containing uppercase and lowercase letters, numbers and symbols.
-    **Password must be at least eight characters long, as in "mypassword". Can be any printable ASCII character except "/", """, or "@".**
-
+* **DBAdminPassword:** Type a complex password. Must be at least 8 characters containing uppercase and lowercase letters, numbers and symbols. Password must be at least eight characters long. Can be any printable ASCII character except "/", """, or "@".**
 * **DBAdminUsername:** Database Admin Username, example: root
 * **DBInstanceClass:** for testing purposes select the smallest available, currently db.t2.small.
 * **Environment:** Text to be included in the database cluster name.
@@ -77,7 +75,7 @@ Select the closest region to your location and click **Launch Stack.**
 * **VPCCIDR:** Leave default. Only modify the address if multiple environment are needed, example: `10.20.0.0/16`
 * Click **Next**, blue button blue button.
 
-![Select Template](img/create-stack-step2.png)
+![Specify Details](img/create-stack-step2.png)
 
 ### 4. Options
 * Leave all defaults, many in blank.

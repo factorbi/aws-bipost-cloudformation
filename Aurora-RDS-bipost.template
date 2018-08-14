@@ -53,13 +53,13 @@
       "Description": "Bucket name provided by Factor BI",
       "Type": "String",
       "AllowedPattern": "[a-zA-Z][a-zA-Z0-9-]*",
-      "ConstraintDescription": "Insert bucket name"
+      "ConstraintDescription": "Paste bucket name provided by Factor BI"
     },
     "SubnetsAZ": {
       "Description": "********** PLEASE SELECT TWO ZONES *********",
       "Type": "List<AWS::EC2::AvailabilityZone::Name>",
       "AllowedPattern" : ".+",
-      "ConstraintDescription" : "Must have values"
+      "ConstraintDescription" : "Please select two zones"
 
     },
     "PublicSubnetACIDR": {
