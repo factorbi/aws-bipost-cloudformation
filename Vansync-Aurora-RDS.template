@@ -12,29 +12,22 @@
       "ConstraintDescription": "Name must begin with a letter and contain only alphanumeric characters"
     },
     "DBAdminPassword": {
-      "AllowedPattern": "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
-      "ConstraintDescription": "Must be characters containing letters, numbers and symbols. Later on you can change this password.",
-      "Description": "Database Admin password. Must be at least 8 characters containing letters, numbers and symbols.",
-      "MaxLength": "100",
+      "Description": "Database Admin password. Must be at least 8 characters containing letters, numbers and symbols, except @, single quote, double quote and slash.",
+      "MaxLength": "60",
       "MinLength": "8",
       "NoEcho": "true",
       "Type": "String"
     },
     "DBInstanceClass": {
-      "Default": "db.t3.small",
+      "Default": "db.t3.medium",
       "Type": "String",
-      "Description": "Database instance class, e.g. db.t3.small",
+      "Description": "Database instance class, e.g. db.t3.medium",
       "ConstraintDescription": "DB instance class not supported",
       "AllowedValues": [
-        "db.t3.small",
         "db.t3.medium",
-        "db.t3.xlarge",
-        "db.r4.large",
-        "db.r4.xlarge",
-        "db.r4.2xlarge",
-        "db.r4.4xlarge",
-        "db.r4.8xlarge",
-        "db.r4.16xlarge"
+        "db.t3.large",
+        "db.t4g.medium",
+        "db.t4g.large"
       ]
     },
     "Environment": {
@@ -427,7 +420,7 @@
                 {
                   "Effect": "Allow",
                   "Action": "lambda:InvokeFunction",
-                  "Resource": "arn:aws:lambda:us-east-1:951464950892:function:bipost-getOutData"
+                  "Resource": "arn:aws:lambda:us-east-1:951464950892:function:vansync-getOutData-160"
                 }
               ]
             }
@@ -466,10 +459,8 @@
       "DependsOn": "DBRole",
       "Properties": {
         "Description": "Vansync Aurora Database Cluster Parameter Group",
-        "Family": "aurora-mysql5.7",
+        "Family": "aurora-mysql8.0",
         "Parameters": {
-          "aurora_load_from_s3_role": {"Fn::GetAtt" : [ "DBRole" , "Arn"] },
-          "aurora_select_into_s3_role":{"Fn::GetAtt" : [ "DBRole" , "Arn"] },
           "aws_default_s3_role": {"Fn::GetAtt" : [ "DBRole" , "Arn"] },
           "aws_default_lambda_role": {"Fn::GetAtt" : [ "DBRole" , "Arn"] },
           "max_allowed_packet": "1073741824",
@@ -477,7 +468,6 @@
           "max_user_connections": "4294967295",
           "event_scheduler": "ON",
           "connect_timeout": "60",
-          "tx_isolation": "REPEATABLE-READ",
           "lock_wait_timeout": "3600",
           "innodb_lock_wait_timeout": "3600",
           "wait_timeout": "10800",
@@ -486,7 +476,8 @@
           "max_heap_table_size": "2147483648",
           "tmp_table_size": "2147483648",
           "optimizer_switch": "block_nested_loop=off",
-          "lower_case_table_names": "0"
+          "lower_case_table_names": "0",
+          "internal_tmp_mem_storage_engine": "TempTable"
         }
       }
     },
@@ -494,18 +485,16 @@
       "Type": "AWS::RDS::DBParameterGroup",
       "Properties": {
         "Description": "Vansync Aurora Parameter Group",
-        "Family": "aurora-mysql5.7",
+        "Family": "aurora-mysql8.0",
         "Parameters": {
           "log_bin_trust_function_creators": "1",
           "max_allowed_packet": "1073741824",
           "max_connections": "16000",
           "max_user_connections": "4294967295",
-          "event_scheduler": "ON",
           "wait_timeout": "10800",
           "interactive_timeout": "10800",
           "net_read_timeout": "10800",
           "connect_timeout": "60",
-          "tx_isolation": "REPEATABLE-READ",
           "log_output": "FILE",
           "lock_wait_timeout": "3600",
           "innodb_lock_wait_timeout": "3600",
@@ -520,7 +509,6 @@
       "Type": "AWS::RDS::DBCluster",
       "Properties": {
         "Engine": "aurora-mysql",
-        "EngineVersion": "5.7",
         "MasterUsername": {
           "Ref": "DBAdminUsername"
         },
