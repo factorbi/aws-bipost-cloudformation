@@ -420,7 +420,14 @@
                 {
                   "Effect": "Allow",
                   "Action": "lambda:InvokeFunction",
-                  "Resource": "arn:aws:lambda:us-east-1:951464950892:function:vansync-getOutData-160"
+                  "Resource": [
+                    "arn:aws:lambda:us-east-1:951464950892:function:vansync-getOutData-160",
+                    "arn:aws:lambda:us-east-1:951464950892:function:vansync-ocelotl-getoutdata-dev",
+                    "arn:aws:lambda:us-east-1:951464950892:function:vansync-ocelotl-getoutdata-300",
+                    "arn:aws:lambda:us-east-1:951464950892:function:vansync-ocelotl-getoutdata-300-x2",
+                    "arn:aws:lambda:us-east-1:951464950892:function:vansync-move-queue-300",
+                    "arn:aws:lambda:us-east-1:951464950892:function:storeJsonToBiMasterApiLogs"
+                    ]
                 }
               ]
             }
